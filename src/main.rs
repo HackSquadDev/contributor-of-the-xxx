@@ -1,22 +1,19 @@
-use svg::node::element::path::Data;
-use svg::node::element::Path;
-use svg::Document;
+use std::{
+    fs::{self, File},
+    io::Write,
+};
 
 fn main() {
-    let data = Data::new()
-        .move_to((10, 10))
-        .line_by((0, 50))
-        .line_by((50, 0))
-        .line_by((0, -50))
-        .close();
+    let contents =
+        fs::read_to_string("placeholder.svg").expect("Should have been able to read the file");
 
-    let path = Path::new()
-        .set("fill", "none")
-        .set("stroke", "black")
-        .set("stroke-width", 3)
-        .set("d", data);
+    let modified = contents
+        .replace("%TITLE%", "CONTRIBUTOR OF OCTOBER 2022")
+        .replace("%PRS%", "3000")
+        .replace("%ISSUES%", "100")
+        .replace("%PRREVIEWS%", "20");
 
-    let document = Document::new().set("viewBox", (0, 0, 1200, 675)).add(path);
+    let mut file = File::create("output.svg").expect("Error creating modified file");
 
-    svg::save("image.svg", &document).unwrap();
+    file.write(modified.as_bytes()).expect("WTF");
 }
