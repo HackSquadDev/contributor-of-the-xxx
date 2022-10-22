@@ -1,0 +1,43 @@
+query OrganizationQuery($organization: String!) {
+  organization(login: $organization) {
+    __typename
+    id
+    name
+    url
+    avatarUrl
+    repositories(first: 100, privacy: PUBLIC, isFork: false) {
+      __typename
+      nodes {
+        id
+        name
+        description
+        url
+        stargazerCount
+        pullRequests(states: MERGED, first: 100) {
+          __typename
+          nodes {
+            __typename
+            title
+            id
+            url
+            mergedAt
+            mergedBy {
+              __typename
+              avatarUrl
+              url
+              login
+            }
+            changedFiles
+            merged
+            author {
+              __typename
+              login
+              avatarUrl
+              url
+            }
+          }
+        }
+      }
+    }
+  }
+}
